@@ -40,6 +40,10 @@ require('./routes/category.routes')(app);
 require('./routes/product.routes')(app);
 require('./routes/auth.routes')(app);
 require('./routes/cartRoutes')(app);
+//so when the api endpoint is not a valid one
+app.use((req,res)=>{
+    res.status(404).send({message:"Requested End point is not present"});
+})
 
 
 
