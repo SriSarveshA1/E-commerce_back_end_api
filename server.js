@@ -2,7 +2,9 @@ const express = require('express');
 const app = express();
 const serverConfig = require('./configs/server.config');
 const bodyParser = require('body-parser');
+
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
 const db=require('./models/index');
 //const res = require('express/lib/response');

@@ -71,7 +71,7 @@ exports.signin=(req,res)=>{
         //so if the provided mail id and password are matched the user is logged in and we neeed to send access token as a responce so that the user can use it again and get authorized for accessing the resources;
                                                         //this jwt expiresIn in the 300 seconds
         var token=jwt.sign({id:user.id},secretKey.secret,{expiresIn:300});
-
+        
         //we need to provide the list of roles that this user has as authorities in response
         
         var authorities =[];
