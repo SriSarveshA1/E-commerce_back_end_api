@@ -23,6 +23,7 @@ const checkDuplicateUser_email_or_password=(req, res, next) => {
     //so we need to check whether the user with provided username already exits 
     if(!req.body.username)
     {
+        console.log("....dai ")
         return res.status(400).send({message: "Enter the valid username"})
     }
     else{
@@ -77,44 +78,51 @@ const checkDuplicateUser_email_or_password=(req, res, next) => {
                   return;
                 }
                 else{
-                    var invalid_roles=[];
-                    /*
-                    Role.findAll({
-                        where: {
-                            name:{
-                                [Op.or]:req.body.roles
-                            }
-                        }
-                    }).then((roles) => {
-                       */
-                    for(var i=0; i<req.body.roles.length; i++)
+                    if(!req.body.roles)
                     {
-                        //console.log("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj")
-                        //console.log(req.body.roles);
-                        var value=req.body.roles[i];
-                        var flag=false;
-                        for(var j=0; j<ROLES.length; j++) {
-                            if(value==ROLES[j])
-                            {
-                                flag=true;
-                                break;
-                            }
-                
-                        }
-                        if(flag==false)
-                        {
-                            console.log("pussher")
-                            invalid_roles.push(value);
-                        }
+                        next();
                     }
-                      if(invalid_roles.length>0)
-                      {
-                          console.log("sdcc= "+invalid_roles);
-                        return res.status(400).send({message: "Invalid roles","roles":[invalid_roles]});
-                      }
-                      else{
-                          next();
-                      }
+                    else{
+                        var invalid_roles=[];
+                        /*
+                        Role.findAll({
+                            where: {
+                                name:{
+                                    [Op.or]:req.body.roles
+                                }
+                            }
+                        }).then((roles) => {
+                           */
+                        for(var i=0; i<req.body.roles.length; i++)
+                        {
+                            //console.log("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj")
+                            //console.log(req.body.roles);
+                            var value=req.body.roles[i];
+                            var flag=false;
+                            for(var j=0; j<ROLES.length; j++) {
+                                if(value==ROLES[j])
+                                {
+                                    flag=true;
+                                    break;
+                                }
+                    
+                            }
+                            if(flag==false)
+                            {
+                                console.log("pussher")
+                                invalid_roles.push(value);
+                            }
+                        }
+                          if(invalid_roles.length>0)
+                          {
+                              console.log("sdcc= "+invalid_roles);
+                            return res.status(400).send({message: "Invalid roles","roles":[invalid_roles]});
+                          }
+                          else{
+                              next();
+                          }
+                    }
+                   
                     
                 }
               });

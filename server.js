@@ -25,11 +25,32 @@ function init(){
     ]
     db.Category.bulkCreate(cat).then(()=>{console.log("Initial categories have been added to database")}).catch(err=>{console.log(err.message)});
     //creating the roles so that we create users based on the roles
-    db.Role.create({id:1,name:"customer"}).then(()=>{console.log("Basic role is created")}).catch(err=>{console.log(err)});
-    db.Role.create({id:2,name:"admin"}).then(()=>{console.log("Basic role is created")}).catch(err=>{console.log(err)});
+    var id1={id:"1"};
+    var id2={id:"2"};
+
+    //if at all the roles are not there previously we are creating them
+    db.Role.findAll({
+        where: {id:id1.id}
+    }).then((role)=>{
+        if(!role)
+        {
+            db.Role.create({id:1,name:"customer"}).then(()=>{console.log("Basic role is created")}).catch(err=>{console.log(err)});
+        }
+    })
+
+    db.Role.findAll({
+        where:{id:id2.id}
+    }).then((role)=>{
+        if(!role)
+        {
+            db.Role.create({id:2,name:"admin"}).then(()=>{console.log("Basic role is created")}).catch(err=>{console.log(err)});
+        }
+        
+    })
+   
 }
 
-db.sequelize.sync({force:true}).then(()=>{
+db.sequelize.sync().then(()=>{
     console.log("table/schema is created");
     init();
 }).catch(err => console.log(err));
@@ -42,6 +63,11 @@ require('./routes/category.routes')(app);
 require('./routes/product.routes')(app);
 require('./routes/auth.routes')(app);
 require('./routes/cartRoutes')(app);
+require('./routes/order.routes')(app);
+
+
+
+
 //so when the api endpoint is not a valid one
 app.use((req,res)=>{
     res.status(404).send({message:"Requested End point is not present"});
@@ -52,4 +78,4 @@ app.use((req,res)=>{
 
 app.listen(serverConfig.PORT,()=>{
     console.log('listening on port',serverConfig.PORT);
-})
+});

@@ -1,5 +1,6 @@
 const constants=require("../constants/constants");
 module.exports=(sequelize,Sequelize)=>{
+   
     const Order=sequelize.define('Order',{
         id:{
             type:Sequelize.INTEGER,

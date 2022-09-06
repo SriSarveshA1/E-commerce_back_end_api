@@ -61,7 +61,7 @@ db.Product.belongsToMany(db.Cart,{
 
 
 db.Order=require('../models/order.model.js')(db.sequelize,db.Sequelize);
-db.OrderDetails=require('../models/orderdetails.model.js')(db.sequelize,db.Sequelize);
+
 
 //So the order table will be having the ID,TOTAL PRICE,TOTAL NO_OF_ITEMS,USERID,ORDER_STATUS
 
@@ -69,7 +69,7 @@ db.OrderDetails=require('../models/orderdetails.model.js')(db.sequelize,db.Seque
 //ONE ORDERID HAS MANY ORDERDETAILS(ONE TO MANY RELATIONSHIP)
 //SO the orderdetails will be having the ID,ORDERID,PRODUCTID,QUANTITY
 
-db.Order.hasMany(db.OrderDetails);
+
 db.User.hasMany(db.Order);//One user has many orders but one order will be of one user.
 
 

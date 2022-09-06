@@ -42,11 +42,16 @@ exports.getCart=(req, res) => {
 exports.update=(req,res)=>{
       //here we are going to add products to the cart which means we are going to increase the cost value
       var cartId=req.params.id;//we will be sending a cart Id to which we are going to add products
-      var noOfItems;
+      var noOfItems=0;
       var cost=0;//this is going to keep track of the overall cost of the 
       Cart.findByPk(cartId).then((cart)=>{
             //so inside the cart we are going to add products that are passed in as body
             var productIds=req.body.productIds;
+
+            if(!req.body.productIds)
+            {
+                  return res.status(404).send("Please provide the product ids");
+            }
             Product.findAll({
                   where:{id:{
                         [Op.or]:productIds
@@ -83,11 +88,16 @@ exports.update=(req,res)=>{
                                        //So after setting the values in the cart_products table ,for each cart id there will be mulitple products so multiple rows will also be there
                                       var updatedObj={
                                            noOfItems:noOfItems,
-                                           cost:cost
+                                           cost:cost,
+                                           UserId:req.userId
                                         }
                                         //So we are adding the noofItems and the total cost to the cart.
                                      Cart.update(updatedObj,{
-                                          where:{id:cartId}
+                                          where:{
+                                               
+                                               id:cartId
+
+                                          }
                                      });
 
 
