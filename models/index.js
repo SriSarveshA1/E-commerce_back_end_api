@@ -26,6 +26,8 @@ db.Role=require('../models/role.model')(db.sequelize,db.Sequelize);
 db.ROLES=["customer","admin"];//we store the roles as theese are the constants and we can use these for faster calculations
 db.Cart=require('../models/cart.model.js')(db.sequelize,db.Sequelize);
 
+
+
 //we are overall setting many to many relationship between Roles and Users(Like one role can be assigned to multiple users and one user can be assigned to multiple roles)
 //we start by assigning one to many reltionship between role and user
 db.Role.belongsToMany(db.User,{
@@ -54,6 +56,22 @@ db.Product.belongsToMany(db.Cart,{
     foreignKey:"product_Id",
     otherKey:"cart_Id"
 });
+
+
+
+
+db.Order=require('../models/order.model.js')(db.sequelize,db.Sequelize);
+db.OrderDetails=require('../models/orderdetails.model.js')(db.sequelize,db.Sequelize);
+
+//So the order table will be having the ID,TOTAL PRICE,TOTAL NO_OF_ITEMS,USERID,ORDER_STATUS
+
+//One user can have one order
+//ONE ORDERID HAS MANY ORDERDETAILS(ONE TO MANY RELATIONSHIP)
+//SO the orderdetails will be having the ID,ORDERID,PRODUCTID,QUANTITY
+
+db.Order.hasMany(db.OrderDetails);
+db.User.hasMany(db.Order);//One user has many orders but one order will be of one user.
+
 
 module.exports=db;
 
