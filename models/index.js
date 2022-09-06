@@ -39,7 +39,7 @@ db.User.belongsToMany(db.Role,{
     through:"User_roles",
     foreignKey:"user_Id",//(id from user table is modified(as our wish) as user_id)//so automatically from the User table the foreignKey will be assigned to User_roles
     otherKey:"role_id"
-});
+}); 
 
 db.User.hasMany(db.Cart);//1 user can have multiple carts but a single cart belongs to only user_id
 

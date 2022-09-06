@@ -33,7 +33,7 @@ exports.getCart=(req, res) => {
                       });
                       cost+=products[i].cost;
                 }
-                res.status(200).send({id:cart.id,selected_products:selected_products,cost:cost});
+                res.status(200).send({id:cart.id,noOfItems:selected_products.length,selected_products:selected_products,cost:cost});
           }).catch((err)=>{res.status(500).send({message:err.message})})
          
     }).catch((err)=>{res.status(500).send({message:err.message})})
@@ -42,6 +42,8 @@ exports.getCart=(req, res) => {
 exports.update=(req,res)=>{
       //here we are going to add products to the cart which means we are going to increase the cost value
       var cartId=req.params.id;//we will be sending a cart Id to which we are going to add products
+      var noOfItems;
+      var cost=0;//this is going to keep track of the overall cost of the 
       Cart.findByPk(cartId).then((cart)=>{
             //so inside the cart we are going to add products that are passed in as body
             var productIds=req.body.productIds;
@@ -62,7 +64,7 @@ exports.update=(req,res)=>{
                           cart.setProducts(products).then(()=>{
                                console.log("Products================================================================================================"+products);
                                 console.log("New Products (whose ids that we passed) are successfully added to the cart.......................................................................");
-                                var cost=0;//this is going to keep track of the overall cost of the 
+                                
                                 var selected_products=[];
                                 cart.getProducts().then((cartProducts)=>{
                                       //so after setting the products with the (new product ids,old products that are in the cart already) and when we try to get those products we get products that are both previously present and newly added
@@ -76,6 +78,19 @@ exports.update=(req,res)=>{
                                            });
                                            cost+=cartProducts[i].cost;
                                      }
+                                     noOfItems=selected_products.length;
+
+                                       //So after setting the values in the cart_products table ,for each cart id there will be mulitple products so multiple rows will also be there
+                                      var updatedObj={
+                                           noOfItems:noOfItems,
+                                           cost:cost
+                                        }
+                                        //So we are adding the noofItems and the total cost to the cart.
+                                     Cart.update(updatedObj,{
+                                          where:{id:cartId}
+                                     });
+
+
                                      res.status(200).send({
                                           id:cart.id,
                                           selected_products:selected_products,
@@ -89,5 +104,9 @@ exports.update=(req,res)=>{
             }).catch((err)=>{
                 res.status(500).send({message: err.message});
             })
-      })
+      }).catch((err)=>{
+            res.status(500).send({message: err.message});
+      });
+
+     
 }
